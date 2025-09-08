@@ -1,405 +1,441 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MEDULA — Portal Paciente</title>
-  <link rel="stylesheet" href="medula.css">
-</head>
-<body>
-  <a href="#historial" class="skip-link">Saltar al contenido</a>
+/* =========================================================
+   MEDULA — Portal Paciente
+   Hoja de estilos global (Desktop-first)
+   ========================================================= */
 
-  <div class="app">
-    <!-- ============ SIDEBAR ============ -->
-    <aside class="sidebar">
-      <!-- Encabezado Marca + Usuario (AHORA SOLO IMAGEN) -->
-      <div class="side-header p-6">
-        <!-- Banner de marca (solo imagen) -->
-        <a class="brand-banner" href="#historial" aria-label="Ir al inicio">
-          <!-- Usa tu imagen larga aquí -->
-          <img src="assets/img/medula_largo_slogan.png" alt="MEDULA" />
-          <!-- Si prefieres tu archivo actual: assets/img/medula_.png -->
-        </a>
+/* -----------------------
+   Paleta base (modo día)
+   ----------------------- */
+:root{
+  --brand-1:#29a5ff;          /* azul claro */
+  --brand-2:#1560ff;          /* azul profundo */
+  --brand-3:#0b4de2;          /* acento oscuro */
 
-        <!-- Botón de usuario (abre perfil) -->
-        <button class="user-card" type="button" aria-label="Abrir perfil de usuario" id="userCardBtn">
-          <div class="user-avatar" aria-hidden="true">MG</div>
-          <div class="user-info">
-            <div class="user-name">María González</div>
-            <div class="user-rut">12.345.678-9</div>
-          </div>
-          <a href="#perfil" class="stretched-link" aria-hidden="true" tabindex="-1"></a>
-        </button>
-      </div>
+  --bg:#f5f7fb;               /* fondo general */
+  --surface:#ffffff;          /* tarjetas / inputs */
+  --sidehead:#eaf2ff;         /* cabecera sidebar (día) */
+  --panel:#e2e8f5;            /* fondo del panel derecho */
+  --panel-surface:#f3f6fc;    /* tarjetas dentro del panel derecho */
 
-      <!-- Navegación -->
-      <nav class="p-6" aria-label="Secciones">
-        <a href="#historial" id="link-historial" class="active"><span class="nav-icon">🗂️</span> Historial Médico</a>
-        <a href="#medicamentos" id="link-medicamentos"><span class="nav-icon">💊</span> Mis Medicamentos</a>
-        <a href="#examenes" id="link-examenes"><span class="nav-icon">🧪</span> Resultados de Exámenes</a>
-        <a href="#perfil" id="link-perfil"><span class="nav-icon">👤</span> Mi Perfil</a>
-      </nav>
+  --border:#dfe5ef;           /* bordes suaves */
+  --muted:#eff2f7;            /* superficies sutiles */
 
-      <!-- Controles -->
-      <div class="p-6 side-footer">
-        <div class="space-y-3">
-          <div class="flex gap-3">
-            <button class="btn btn-outline" id="btn-font" aria-pressed="false">A+ Tamaño</button>
-            <button class="btn btn-outline" id="btn-dark" aria-pressed="false">Modo Noche</button>
-          </div>
-          <div class="flex gap-3">
-            <button class="btn" id="btn-allow-notif" title="Permitir avisos en este dispositivo">🔔 Permitir avisos</button>
-            <button class="btn" id="btn-export-all" title="Exportar todos los recordatorios como .ics">🗂️ Exportar todo</button>
-          </div>
-          <a id="btn-sync-gcal" class="btn" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/u/0/r/settings/import">🔄 Sincronizar con Google</a>
-          <button class="btn" id="btn-logout">↩️ Cerrar Sesión</button>
-        </div>
-      </div>
-    </aside>
+  --text:#0f1b2d;             /* texto principal */
+  --text-2:#5a6b87;           /* texto secundario */
 
-    <!-- ============ CONTENIDO PRINCIPAL ============ -->
-    <main class="main">
-      <div class="p-6">
-        <!-- HISTORIAL -->
-        <section class="section" id="historial">
-          <div class="space-y-7">
-            <div class="flex items-center between">
-              <h2 class="page-title">Historial Médico</h2>
-              <button class="btn btn-primary" id="btn-print">⬇️ Descargar PDF</button>
-            </div>
+  --success:#10b981;
+  --danger:#ef4444;
 
-            <div class="space-y-5">
-              <div class="card p-5">
-                <div class="entry">
-                  <div class="entry-left">
-                    <div class="icon-circle" aria-hidden="true">📈</div>
-                    <div>
-                      <div class="flex items-center gap-2">
-                        <h3 class="entry-title">Control General</h3>
-                        <span class="badge badge-brand">15 Ene 2024</span>
-                      </div>
-                      <p class="subtitle">Dra. Valentina Araya</p>
-                      <p>Diagnóstico: Estado saludable. Control en 6 meses.</p>
-                    </div>
-                  </div>
-                  <button class="btn btn-ghost view-btn"
-                          data-title="Control General"
-                          data-detail="Dra. Valentina Araya — 15 Ene 2024\nDiagnóstico: Estado saludable. Control en 6 meses.">👁️ Ver</button>
-                </div>
-              </div>
+  --radius-lg:16px;
+  --shadow:0 10px 28px rgba(8,23,54,.08);
+  --focus:0 0 0 3px rgba(21,96,255,.28);
 
-              <div class="card p-5">
-                <div class="entry">
-                  <div class="entry-left">
-                    <div class="icon-circle" aria-hidden="true">📈</div>
-                    <div>
-                      <div class="flex items-center gap-2">
-                        <h3 class="entry-title">Consulta Nutrición</h3>
-                        <span class="badge badge-brand">02 Mar 2024</span>
-                      </div>
-                      <p class="subtitle">Nut. Camilo Vega</p>
-                      <p>Diagnóstico: Ajuste de dieta mediterránea.</p>
-                    </div>
-                  </div>
-                  <button class="btn btn-ghost view-btn"
-                          data-title="Consulta Nutrición"
-                          data-detail="Nut. Camilo Vega — 02 Mar 2024\nDiagnóstico: Ajuste de dieta mediterránea.">👁️ Ver</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+  --base-font:17px;           /* accesible para adultos */
+}
 
-        <!-- MEDICAMENTOS -->
-        <section class="section" id="medicamentos" hidden>
-          <div class="space-y-7">
-            <h2 class="page-title">Mis Medicamentos</h2>
+/* Tipografía opcional (coloca el archivo si la usas)
+@font-face{
+  font-family:"Fira Sans";
+  src:url("assets/fonts/FiraSans-Variable.woff2") format("woff2-variations");
+  font-weight:100 900;
+  font-style:normal;
+  font-display:swap;
+}
+*/
 
-            <div class="space-y-5">
-              <div class="card p-5">
-                <div class="med-row">
-                  <div class="flex items-center gap-4">
-                    <div class="pill-icon" aria-hidden="true">💊</div>
-                    <div>
-                      <h3 class="entry-title">Metformina</h3>
-                      <p class="subtitle">850 mg — 1 cada 12h</p>
-                      <p>Próxima dosis: hoy 20:00</p>
-                    </div>
-                  </div>
-                  <div class="stock">
-                    <p>Stock: 8 días</p>
-                    <div class="progress" aria-label="progreso stock"><span style="width:28%"></span></div>
-                  </div>
-                </div>
-              </div>
+html{ font-size:var(--base-font); }
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Fira Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, Noto Sans;
+  line-height:1.6;
+}
 
-              <div class="card p-5">
-                <div class="med-row">
-                  <div class="flex items-center gap-4">
-                    <div class="pill-icon" aria-hidden="true">💊</div>
-                    <div>
-                      <h3 class="entry-title">Losartán</h3>
-                      <p class="subtitle">50 mg — 1 diaria</p>
-                      <p>Próxima dosis: mañana 08:00</p>
-                    </div>
-                  </div>
-                  <div class="stock">
-                    <p>Stock: 22 días</p>
-                    <div class="progress" aria-label="progreso stock"><span style="width:73%"></span></div>
-                  </div>
-                </div>
-              </div>
+/* -----------------------
+   Utilidades layout
+   ----------------------- */
+.app{ min-width:1280px; height:100vh; display:flex; }
+.sidebar{ width:340px; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; }
+.main{ flex:1; overflow:auto; }
+.right{ width:640px; background:var(--panel); border-left:1px solid var(--border); overflow:auto; }
 
-            </div>
-          </div>
-        </section>
+.p-6{padding:24px;} .p-5{padding:20px;} .p-4{padding:16px;}
+.space-y-8>*+*{margin-top:32px;} .space-y-7>*+*{margin-top:28px;} .space-y-5>*+*{margin-top:20px;} .space-y-4>*+*{margin-top:16px;} .space-y-3>*+*{margin-top:12px;}
+.flex{display:flex;} .items-center{align-items:center;} .between{justify-content:space-between;}
+.gap-2{gap:8px;} .gap-3{gap:12px;} .gap-4{gap:16px;}
 
-        <!-- EXÁMENES -->
-        <section class="section" id="examenes" hidden>
-          <div class="space-y-7">
-            <h2 class="page-title">Resultados de Exámenes</h2>
+/* -----------------------
+   Sidebar: header
+   ----------------------- */
+.side-header{ background:var(--sidehead); border-bottom:1px solid var(--border); }
+.brand-banner{ display:block; margin:-4px 0 16px; }
+.brand-banner img{ display:block; width:100%; height:auto; max-height:88px; object-fit:contain; }
 
-            <div class="space-y-5">
-              <div class="card p-5">
-                <div class="flex items-center between">
-                  <div class="flex items-center gap-4">
-                    <div class="doc-icon" aria-hidden="true">📄</div>
-                    <div>
-                      <h3 class="entry-title">Perfil Lipídico</h3>
-                      <p class="subtitle">15 Dic 2023</p>
-                      <span class="badge ok">✅ Normal</span>
-                    </div>
-                  </div>
-                  <button class="btn btn-ghost view-btn" data-title="Perfil Lipídico" data-detail="15 Dic 2023 — Resultado: Normal">👁️ Ver</button>
-                </div>
-              </div>
+/* Botón de usuario (card clickeable) */
+.user-card{
+  position:relative; width:100%;
+  display:flex; align-items:center; gap:12px;
+  padding:12px; border-radius:12px;
+  border:1px solid #cfe0ff;
+  background:rgba(41,165,255,.12);
+  color:var(--text); cursor:pointer; text-align:left;
+}
+.user-card:hover{ filter:brightness(.98); }
+.user-card:focus{ outline:none; box-shadow:var(--focus); }
+.user-avatar{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800; color:#2a6dff; background:rgba(41,165,255,.18);
+}
+.user-info{ display:grid; gap:2px; }
+.user-name{ font-weight:800; }
+.user-rut{ font-size:.95rem; opacity:.9; }
 
-              <div class="card p-5">
-                <div class="flex items-center between">
-                  <div class="flex items-center gap-4">
-                    <div class="doc-icon" aria-hidden="true">📄</div>
-                    <div>
-                      <h3 class="entry-title">Hemograma Completo</h3>
-                      <p class="subtitle">28 Nov 2023</p>
-                      <span class="badge ok">✅ Normal</span>
-                    </div>
-                  </div>
-                  <button class="btn btn-ghost view-btn" data-title="Hemograma Completo" data-detail="28 Nov 2023 — Resultado: Normal">👁️ Ver</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+/* Enlace invisible para hacer clickable todo el bloque */
+.stretched-link{ position:absolute; inset:0; display:block; }
 
-        <!-- PERFIL -->
-        <section class="section" id="perfil" hidden>
-          <div class="space-y-7">
-            <h2 class="page-title">Mi Perfil</h2>
+/* -----------------------
+   Navegación lateral
+   ----------------------- */
+nav[aria-label="Secciones"] a{
+  display:flex; align-items:center; gap:12px;
+  padding:12px 14px; border-radius:12px;
+  text-decoration:none; color:var(--text);
+  border:1px solid transparent; font-weight:700;
+}
+nav[aria-label="Secciones"] a:hover{ background:var(--muted); }
+nav[aria-label="Secciones"] a.active{
+  background:linear-gradient(90deg,var(--brand-1),var(--brand-2));
+  color:#fff;
+}
+.nav-icon{
+  width:22px;height:22px;border-radius:8px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:rgba(21,96,255,.08); color:#1850ff; font-weight:800;
+}
 
-            <div class="card">
-              <div class="p-5">
-                <h3 class="section-subtitle">Información Personal</h3>
-                <div class="space-y-5">
-                  <div class="grid-2">
-                    <div>
-                      <div class="label">Nombre Completo</div>
-                      <p class="value">María Esperanza González Pérez</p>
-                    </div>
-                    <div>
-                      <div class="label">RUT</div>
-                      <p class="value">12.345.678-9</p>
-                    </div>
-                    <div>
-                      <div class="label">Fecha de Nacimiento</div>
-                      <p class="value">15 de Marzo, 1985</p>
-                    </div>
-                    <div>
-                      <div class="label">Edad</div>
-                      <p class="value">38 años</p>
-                    </div>
-                  </div>
+/* Footer del sidebar: botones */
+.side-footer .space-y-3>.flex .btn{ flex:1; }
+#btn-sync-gcal, #btn-logout{ width:100%; }
 
-                  <div class="separator"></div>
+/* -----------------------
+   Botones
+   ----------------------- */
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  border:1px solid var(--border); background:#fff; color:var(--text);
+  padding:12px 16px; border-radius:12px; cursor:pointer;
+  font-weight:700; min-height:44px;
+}
+.btn:hover{ background:var(--muted); }
+.btn-primary{ background:linear-gradient(90deg,var(--brand-1),var(--brand-2)); color:#fff; border-color:transparent; }
+.btn-ghost{ background:transparent; }
+.btn-outline{ background:#fff; }
 
-                  <div class="grid-2">
-                    <div>
-                      <div class="label">Plan FONASA</div>
-                      <p class="value">Tramo B</p>
-                    </div>
-                    <div>
-                      <div class="label">Centro de Salud</div>
-                      <p class="value">CESFAM La Florida</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+/* -----------------------
+   Inputs y campos
+   ----------------------- */
+.field{ display:grid; gap:6px; }
+input[type="text"], input[type="date"], input[type="time"], select, textarea{
+  border:1px solid var(--border); border-radius:12px;
+  padding:12px 14px; font:inherit; background:#fff; color:var(--text);
+}
+textarea{ min-height:88px; resize:vertical; }
+input:focus, select:focus, textarea:focus{ outline:none; box-shadow:var(--focus); }
 
-      </div>
-    </main>
+/* -----------------------
+   Tarjetas, badges, tipografía
+   ----------------------- */
+.card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow); }
+.page-title{ font-size:1.6rem; font-weight:800; margin:0; }
+.subtitle{ color:var(--text-2); font-size:.95rem; margin:2px 0 0; }
 
-    <!-- ============ PANEL DERECHO (Formulario + Buscador + Calendario + Citas) ============ -->
-    <aside class="right p-6 space-y-8">
-      <!-- Formulario nuevo recordatorio -->
-      <div class="card" aria-labelledby="formTitle">
-        <div class="p-5 space-y-4">
-          <h3 id="formTitle">➕ Nuevo recordatorio</h3>
-          <form id="reminderForm" class="grid-2" autocomplete="off">
-            <div class="field">
-              <label for="title" class="label">Título *</label>
-              <input id="title" name="title" type="text" required placeholder="Ej: Consulta cardiología" />
-            </div>
-            <div class="field">
-              <label for="type" class="label">Tipo *</label>
-              <select id="type" name="type" required>
-                <option value="consulta">Consulta</option>
-                <option value="examen">Examen</option>
-                <option value="medicamento">Medicamento</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="date" class="label">Fecha *</label>
-              <input id="date" name="date" type="date" required />
-            </div>
-            <div class="field">
-              <label for="time" class="label">Hora</label>
-              <input id="time" name="time" type="time" />
-            </div>
-            <div class="field">
-              <label for="location" class="label">Lugar</label>
-              <input id="location" name="location" type="text" placeholder="Clínica, dirección o virtual" />
-            </div>
-            <div class="field">
-              <label for="notes" class="label">Notas</label>
-              <textarea id="notes" name="notes" placeholder="Indicaciones, preparación, etc."></textarea>
-            </div>
-            <div class="field field-actions">
-              <button type="submit" class="btn btn-primary">💾 Añadir al calendario</button>
-              <button type="button" id="exportICSBtn" class="btn">📥 Guardar y exportar .ics</button>
-              <span id="formStatus" class="subtitle" aria-live="polite"></span>
-            </div>
-          </form>
-        </div>
-      </div>
+.badge{
+  display:inline-flex; align-items:center; gap:6px;
+  border:1px solid var(--border); border-radius:999px;
+  padding:2px 10px; font-size:.9rem; color:var(--text-2); background:#fff;
+}
+.badge.ok{ background:#ecfdf5; border-color:#a7f3d0; color:#065f46; }
 
-      <!-- Buscador global accesible (sticky) -->
-      <div class="global-search" role="search" aria-label="Buscar eventos">
-        <label for="searchBox" class="sr-only">Buscar eventos</label>
-        <div class="global-search__wrap">
-          <span class="global-search__icon" aria-hidden="true">🔎</span>
-          <input
-            id="searchBox"
-            type="text"
-            placeholder="Buscar eventos"
-            aria-label="Buscar eventos por título, lugar o notas"
-          />
-        </div>
-      </div>
+/* Fecha con branding (mejor contraste) */
+.badge-brand{
+  background:#e8f1ff; color:#1e3a8a; border-color:#c7d7f5;
+}
 
-      <!-- Calendario -->
-      <div class="calendar" aria-label="Calendario">
-        <div class="cal-head">
-          <div class="cal-actions">
-            <button class="btn" id="prevMonth" aria-label="Mes anterior">◀</button>
-            <button class="btn" id="todayBtn" aria-label="Ir a hoy">Hoy</button>
-            <button class="btn" id="nextMonth" aria-label="Mes siguiente">▶</button>
-          </div>
-          <div class="cal-title"><span id="monthName">—</span> <span id="yearNum">—</span></div>
-          <div class="cal-toolbar">
-            <div class="segmented" role="group" aria-label="Cambiar vista">
-              <button id="viewMonth" aria-pressed="true">Mes</button>
-              <button id="viewWeek" aria-pressed="false">Semana</button>
-              <button id="viewList" aria-pressed="false">Lista</button>
-            </div>
-          </div>
-        </div>
+/* Separadores y rejillas */
+.separator{ height:1px; background:var(--border); margin:8px 0; }
+.grid-2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.label{ color:var(--text-2); font-size:1rem; margin-bottom:4px; }
+.value{ margin:0; font-weight:800; }
 
-        <div class="cal-legend" aria-hidden="true">
-          <span><span class="cal-dot consulta"></span>Consulta</span>
-          <span><span class="cal-dot examen"></span>Examen</span>
-          <span><span class="cal-dot medicamento"></span>Medicamento</span>
-        </div>
+/* Filas de historial / medicamentos */
+.entry{ display:flex; align-items:flex-start; justify-content:space-between; }
+.entry-left{ display:flex; align-items:flex-start; gap:14px; }
+.icon-circle{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--brand-1),var(--brand-2));
+  color:#fff; display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.entry-title{ margin:0; font-weight:800; }
 
-        <!-- Vistas -->
-        <div id="monthView">
-          <div class="cal-grid" id="calGrid"><!-- JS genera 42 celdas --></div>
-        </div>
+.med-row{ display:flex; align-items:center; justify-content:space-between; }
+.pill-icon{
+  width:46px;height:46px;border-radius:14px;
+  background:linear-gradient(135deg,var(--brand-1),var(--brand-2));
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;
+}
+.stock p{ margin:0 0 6px; font-weight:800; }
+.progress{ width:120px; height:10px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
+.progress>span{ display:block; height:100%; background:linear-gradient(90deg,var(--brand-1),var(--brand-2)); }
 
-        <div id="weekView" hidden>
-          <div class="week-grid" id="weekGrid"><!-- JS --></div>
-        </div>
+/* Exámenes */
+.doc-icon{
+  width:46px;height:46px;border-radius:14px;
+  background:rgba(21,96,255,.08); display:flex; align-items:center; justify-content:center;
+  color:#1850ff; font-size:20px;
+}
 
-        <div id="listView" hidden>
-          <div id="listWrap"><!-- JS --></div>
-        </div>
-      </div>
+/* -----------------------
+   Panel derecho – superficies claras (día)
+   ----------------------- */
+.right .card,
+.right .calendar,
+.right .cal-cell,
+.right .week-col,
+.right .list-day,
+.right .appt{
+  background:var(--panel-surface);
+}
+.right .count{ background:#e3ebff; color:#1e3a8a; }
 
-      <!-- Próximas Citas -->
-      <div class="card">
-        <div class="p-5">
-          <div class="flex between items-center">
-            <h3>📅 Próximas Citas</h3>
-            <div class="flex gap-2">
-              <select id="filterType" aria-label="Filtrar por tipo" class="btn">
-                <option value="all">Todas</option>
-                <option value="consulta">Consulta</option>
-                <option value="examen">Examen</option>
-                <option value="medicamento">Medicamento</option>
-              </select>
-              <button id="clearAll" class="btn" title="Borrar todos">🗑️</button>
-            </div>
-          </div>
-          <div id="apptList" class="space-y-3" aria-live="polite"></div>
-        </div>
-      </div>
+/* -----------------------
+   Calendario (mes)
+   ----------------------- */
+.calendar{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow); }
+.cal-head{
+  padding:18px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+}
+.cal-actions{ display:flex; gap:8px; align-items:center; }
+.cal-title{ font-weight:800; min-width:220px; text-align:center; }
+.cal-toolbar{ display:flex; gap:12px; align-items:center; }
 
-      <!-- Alertas -->
-      <div class="card">
-        <div class="p-5 space-y-3">
-          <h3>⚠️ Alertas</h3>
-          <div class="alert warn">
-            <div class="alert-title">Medicamento por acabar</div>
-            <div class="alert-text">Metformina — 8 días restantes</div>
-          </div>
-          <div class="alert info">
-            <div class="alert-title">Recordatorio</div>
-            <div class="alert-text">Control cardiológico pendiente</div>
-          </div>
-        </div>
-      </div>
+.segmented{ display:inline-flex; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:var(--muted); }
+.segmented button{
+  border:0; background:transparent; padding:9px 12px; cursor:pointer;
+  font-weight:700; color:var(--text); border-right:1px solid var(--border);
+}
+.segmented button:last-child{ border-right:0; }
+.segmented button[aria-pressed="true"]{
+  background:#eef5ff; color:#1f3556; box-shadow:inset 0 0 0 1px #cfe0ff;
+}
 
-      <!-- Emergencias -->
-      <div class="card">
-        <div class="p-5">
-          <h3>☎️ Emergencias</h3>
-          <div class="space-y-3 emg">
-            <div>SAMU: 131</div>
-            <div>Bomberos: 132</div>
-            <div>Carabineros: 133</div>
-            <div class="separator"></div>
-            <div>✉️ medula@fonasa.cl</div>
-          </div>
-        </div>
-      </div>
-    </aside>
-  </div>
+.cal-legend{ display:flex; gap:12px; align-items:center; justify-content:flex-end; padding:8px 16px 0; color:var(--text-2); }
+.cal-legend span{ display:inline-flex; align-items:center; gap:8px; font-size:.95rem; }
+.cal-dot{ display:inline-block; width:10px; height:10px; border-radius:50%; }
+.cal-dot.consulta{ background:rgba(37,99,235,.85); }
+.cal-dot.examen{ background:rgba(124,58,237,.85); }
+.cal-dot.medicamento{ background:rgba(5,150,105,.85); }
 
-  <!-- Modal genérico -->
-  <div class="modal" id="modal">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="head">
-        <strong id="modalTitle">Detalle</strong>
-        <button class="btn" id="closeModal" aria-label="Cerrar">✖</button>
-      </div>
-      <div class="body">
-        <pre id="modalBody" class="modal-pre"></pre>
-      </div>
-    </div>
-  </div>
+.cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:8px; padding:16px; }
+.cal-dow{ font-size:.9rem; color:var(--text-2); text-transform:uppercase; letter-spacing:.05em; text-align:center; padding:6px 0; }
+.cal-cell{
+  background:var(--surface); border:1px solid var(--border);
+  min-height:136px; border-radius:12px; padding:8px; position:relative;
+}
+.cal-day{ font-size:1rem; color:var(--text-2); }
+.events{ margin-top:6px; display:grid; gap:6px; }
+.count{
+  position:absolute; top:8px; right:8px;
+  background:#DCEBFF; color:#1f3556; border:1px solid #c7d7f5;
+  border-radius:999px; min-width:22px; height:22px; display:flex; align-items:center; justify-content:center;
+  font-size:.85rem; font-weight:800;
+}
 
-  <!-- JS -->
-  <script src="medula.js" defer></script>
-</body>
-</html>
+.cal-event{
+  display:block; font-size:.95rem; padding:6px 8px; border-radius:10px;
+  border:1px solid #cfe0ff; color:#0d233a; background:#F2F8FF;
+}
+.cal-event[data-type="consulta"]{ background:rgba(37,99,235,.10); border-color:rgba(37,99,235,.25); color:#1e3a8a; }
+.cal-event[data-type="examen"]{ background:rgba(124,58,237,.12); border-color:rgba(124,58,237,.28); color:#4c1d95; }
+.cal-event[data-type="medicamento"]{ background:rgba(5,150,105,.12); border-color:rgba(5,150,105,.28); color:#064e3b; }
+
+.flash{ animation:flash 1.6s ease-in-out 1; }
+@keyframes flash{
+  0%{box-shadow:0 0 0 0 rgba(21,96,255,.6)}
+  60%{box-shadow:0 0 0 16px rgba(21,96,255,0)}
+  100%{box-shadow:0 0 0 0 rgba(21,96,255,0)}
+}
+
+/* Semana */
+#weekView{ padding:16px; }
+.week-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:10px; }
+.week-col{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px; min-height:220px; }
+.week-col h4{ margin:0 0 8px; font-weight:800; color:var(--text-2); }
+.week-item{ margin:8px 0; padding:8px 10px; border-radius:10px; border:1px solid transparent; }
+.week-item[data-type="consulta"]{ background:rgba(37,99,235,.10); border-color:rgba(37,99,235,.25); }
+.week-item[data-type="examen"]{ background:rgba(124,58,237,.12); border-color:rgba(124,58,237,.28); }
+.week-item[data-type="medicamento"]{ background:rgba(5,150,105,.12); border-color:rgba(5,150,105,.28); }
+
+/* Lista */
+#listView{ padding:16px; }
+.list-day{ margin:8px 0; padding:12px; border:1px solid var(--border); background:var(--surface); border-radius:12px; }
+.list-day h4{ margin:0 0 8px; font-weight:800; color:var(--text-2); }
+
+/* Próximas Citas */
+.appt{ padding:14px; border:1px solid var(--border); border-radius:14px; background:var(--surface); }
+.appt-time{ display:flex; align-items:center; gap:8px; color:var(--text-2); font-weight:700; }
+.appt strong{ font-weight:800; }
+
+/* -----------------------
+   Buscador global (sticky)
+   ----------------------- */
+.sr-only{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+
+/* Ajustado: más separación con la tarjeta anterior */
+.global-search{
+  position:sticky; top:0; z-index:15;
+  background:var(--panel);
+  padding-bottom:12px;
+  margin-top:16px;          /* <- separa del formulario */
+}
+/* Si viene justo después de una card, agrega respiro extra */
+.right .card + .global-search{
+  margin-top:20px;          /* ajustable 16–24px */
+}
+
+.global-search__wrap{
+  display:flex; align-items:center; gap:10px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px; padding:10px 12px;
+  box-shadow:var(--shadow);
+}
+.global-search__icon{ font-size:1.1rem; opacity:.8; }
+.global-search input{
+  width:100%; border:none; background:transparent; padding:6px 4px;
+  font:inherit; color:var(--text); outline:none;
+}
+
+/* -----------------------
+   Alertas
+   ----------------------- */
+.alert{ border-radius:12px; padding:12px; }
+.alert.warn{ background:#fff7ed; border:1px solid #fed7aa; color:#7c2d12; }
+.alert.info{ background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; }
+.alert-title{ font-weight:800; }
+.alert-text{ margin-top:4px; opacity:.95; }
+
+/* -----------------------
+   Accesibilidad / impresión
+   ----------------------- */
+a:focus,button:focus,input:focus,select:focus,textarea:focus{ outline:none; box-shadow:var(--focus); }
+.skip-link{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+.skip-link:focus{ left:16px; top:16px; width:auto; height:auto; padding:8px 12px; z-index:100; background:var(--brand-2); color:#fff; border-radius:8px; }
+
+@media print{
+  .sidebar,.right,.segmented,.global-search,.btn,nav[aria-label="Secciones"]{ display:none!important; }
+  .app,.main{ width:100%!important; min-width:auto!important; }
+  body{ background:#fff; }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion:reduce){
+  .flash{ animation:none!important; } *{ scroll-behavior:auto; }
+}
+
+/* =========================================================
+   MODO NOCHE (sin brillos, alto confort visual)
+   ========================================================= */
+body.theme-dark{
+  --bg:#0f1628;
+  --surface:#151a2d;
+  --panel:#11162a;
+  --panel-surface:#141a2b;
+  --sidehead:#151b2f;
+
+  --border:#2a3452;
+  --muted:#1a2138;
+
+  --text:#e6e9f4;
+  --text-2:#b8c2d6;
+
+  --focus:0 0 0 3px rgba(148,163,184,.35);
+}
+
+/* Sidebar header y user card */
+body.theme-dark .side-header{ background:var(--sidehead); border-bottom-color:var(--border); }
+body.theme-dark .user-card{ border-color:#2a3a5d; background:#1f2b44; color:#d3e3ff; }
+body.theme-dark .user-card:hover{ filter:brightness(1.02); }
+body.theme-dark .user-avatar{ color:#d8e6ff; background:#243458; }
+
+/* Navegación */
+body.theme-dark nav[aria-label="Secciones"] a:hover{ background:#1b2236; }
+body.theme-dark .nav-icon{ background:#1b2236; color:#cbd5e1; }
+
+/* Botones */
+body.theme-dark .btn, body.theme-dark .btn-outline{
+  background:#181e31; color:var(--text); border-color:#242c46;
+}
+body.theme-dark .btn:hover{ background:#1c2338; }
+body.theme-dark .btn-primary{ background:#2a3146; border-color:#2a3146; color:#e5e7eb; }
+
+/* Inputs */
+body.theme-dark input[type="text"],
+body.theme-dark input[type="date"],
+body.theme-dark input[type="time"],
+body.theme-dark select,
+body.theme-dark textarea{
+  background:#1a2138; color:var(--text); border-color:#2a3452;
+}
+
+/* Tarjetas y superficies */
+body.theme-dark .card,
+body.theme-dark .calendar{ background:#151a2d; border-color:#2a3452; }
+body.theme-dark .cal-cell,
+body.theme-dark .week-col,
+body.theme-dark .list-day,
+body.theme-dark .appt{ background:#141a2b; border-color:#2a3452; }
+
+/* Contadores y badges */
+body.theme-dark .count{ background:#1b2742; color:#cfe3ff; border:1px solid #2a3a5d; }
+body.theme-dark .badge{ background:transparent; border-color:#2f3a5a; color:#cbd5e1; }
+body.theme-dark .badge-brand{ background:#1c2650; color:#dbe7ff; border-color:#2a3a5d; }
+
+/* Progress */
+body.theme-dark .progress{ background:#232a45; }
+body.theme-dark .progress>span{ background:#2d3654; }
+
+/* Segmented */
+body.theme-dark .segmented{ background:#151b2d; border-color:#2a3452; }
+body.theme-dark .segmented button{ color:#b8c2d6; border-right-color:#2a3452; }
+body.theme-dark .segmented button[aria-pressed="true"]{
+  background:rgba(82,134,197,.18); color:#dbe7f7; box-shadow:inset 0 0 0 1px rgba(82,134,197,.36);
+}
+
+/* Buscador global */
+body.theme-dark .global-search{ background:var(--panel); }
+body.theme-dark .global-search__wrap{ background:#1a2138; border-color:#2a3452; box-shadow:none; }
+body.theme-dark .global-search input{ color:var(--text); }
+
+/* Leyenda y puntos */
+body.theme-dark .cal-dot.consulta{ background:#4b6ea8!important; }
+body.theme-dark .cal-dot.examen{ background:#495f9c!important; }
+body.theme-dark .cal-dot.medicamento{ background:#3a7a86!important; }
+
+/* Eventos (chips) — celestes/violetas suaves, sin fatiga */
+body.theme-dark .cal-event,
+body.theme-dark .week-item{
+  background:#141b2a!important; border-color:#253354!important; color:#dbe7f7!important;
+}
+body.theme-dark .cal-event[data-type="consulta"],
+body.theme-dark .week-item[data-type="consulta"]{
+  background:rgba(82,134,197,.18)!important; border-color:rgba(82,134,197,.36)!important; color:#d9e7ff!important;
+}
+body.theme-dark .cal-event[data-type="examen"],
+body.theme-dark .week-item[data-type="examen"]{
+  background:rgba(94,118,190,.16)!important; border-color:rgba(94,118,190,.34)!important; color:#dde3ff!important;
+}
+body.theme-dark .cal-event[data-type="medicamento"],
+body.theme-dark .week-item[data-type="medicamento"]{
+  background:rgba(64,142,156,.16)!important; border-color:rgba(64,142,156,.34)!important; color:#d7f4ff!important;
+}
