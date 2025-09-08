@@ -439,3 +439,15 @@ body.theme-dark .cal-event[data-type="medicamento"],
 body.theme-dark .week-item[data-type="medicamento"]{
   background:rgba(64,142,156,.16)!important; border-color:rgba(64,142,156,.34)!important; color:#d7f4ff!important;
 }
+/* Drag & Drop: feedback visual */
+.appt[draggable="true"]{ cursor: grab; }
+.appt.dragging{ opacity:.6; }
+
+#clearAll.drop-ready{
+  outline: 2px dashed #94a3b8;
+  background: #eef2f7;
+}
+body.theme-dark #clearAll.drop-ready{
+  outline-color:#3b4a6b;
+  background:#1d2540;
+}

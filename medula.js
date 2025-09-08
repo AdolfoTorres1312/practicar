@@ -87,6 +87,12 @@
     const f = localStorage.getItem(LS_KEYS.FONT);
     state.fontScale = f ? Number(f) : 0;
     applyFontScale();
+
+    // Si no hay eventos guardados, sembrar algunos de ejemplo (evita lista vacía)
+    if (!state.events || state.events.length === 0) {
+      seedInitialEventsIfEmpty();
+      saveEvents();
+    }
   }
 
   function saveEvents() {
@@ -107,6 +113,23 @@
   }
 
   // ----------------------------
+  // Semilla de eventos iniciales
+  // ----------------------------
+  function seedInitialEventsIfEmpty() {
+    // Crea algunos eventos en el mes actual para que "Próximas Citas" no aparezca vacío
+    const y = state.current.getFullYear();
+    const m = state.current.getMonth(); // 0-11
+    const mkDate = (day) => `${y}-${pad2(m+1)}-${pad2(day)}`;
+
+    const seed = [
+      { title:"Vacuna Influenza", type:"medicamento", date: mkDate(5),  time:"09:00", location:"CESFAM La Florida", notes:"Dosis anual" },
+      { title:"Control nutrición", type:"consulta",   date: mkDate(13), time:"12:30", location:"Clínica Central",   notes:"Revisión de pauta" },
+      { title:"Hemograma",         type:"examen",     date: mkDate(25), time:"08:00", location:"Laboratorio X",      notes:"Ayuno 8h" }
+    ];
+    seed.forEach(s => addEvent(s, {persist:false}));
+  }
+
+  // ----------------------------
   // Tema y tipografía
   // ----------------------------
   function applyTheme() {
@@ -124,7 +147,6 @@
   function applyFontScale() {
     const sizes = ["17px","19px","21px"];
     const size = sizes[state.fontScale] || sizes[0];
-    // La hoja usa html{ font-size: var(--base-font); }
     document.documentElement.style.setProperty("--base-font", size);
     const btn = $("#btn-font");
     if (btn) btn.setAttribute("aria-pressed", state.fontScale > 0 ? "true" : "false");
@@ -143,8 +165,8 @@
     // evt: {title,type,date,time,location,notes}
     const item = {
       id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
-      title: evt.title.trim(),
-      type: evt.type,
+      title: (evt.title||"").trim(),
+      type: evt.type || "consulta",
       date: evt.date, // ISO yyyy-mm-dd
       time: evt.time || "",
       location: evt.location || "",
@@ -154,6 +176,16 @@
     state.events.push(item);
     if (persist) saveEvents();
     return item;
+  }
+
+  function removeEventById(id) {
+    const idx = state.events.findIndex(e=>e.id===id);
+    if (idx >= 0) {
+      const [removed] = state.events.splice(idx,1);
+      saveEvents();
+      return removed;
+    }
+    return null;
   }
 
   function removeAllEvents() {
@@ -246,12 +278,7 @@
       });
       cell.appendChild(evWrap);
 
-      if (dayEvents.length > 3) {
-        const c = document.createElement("div");
-        c.className = "count";
-        c.textContent = String(dayEvents.length);
-        cell.appendChild(c);
-      } else if (dayEvents.length > 0) {
+      if (dayEvents.length > 0) {
         const c = document.createElement("div");
         c.className = "count";
         c.textContent = String(dayEvents.length);
@@ -377,7 +404,7 @@
   }
 
   // ----------------------------
-  // Próximas citas
+  // Próximas citas (+ draggable)
   // ----------------------------
   function renderUpcoming() {
     const list = $("#apptList");
@@ -399,6 +426,8 @@
     ups.forEach(e=>{
       const card = document.createElement("div");
       card.className = "appt";
+      card.setAttribute("draggable", "true");
+      card.dataset.id = e.id;
 
       const dt = parseDateTime(e.date, e.time);
       const dateStr = `${pad2(dt.getDate())}/${pad2(dt.getMonth()+1)}/${dt.getFullYear()} ${pad2(dt.getHours())}:${pad2(dt.getMinutes())}`;
@@ -409,6 +438,17 @@
         <div class="subtitle">${prettyType(e.type)} ${e.location ? "• " + e.location : ""}</div>
       `;
       card.addEventListener("click", ()=> openModal(e.title, buildEventDetail(e)));
+
+      // Drag & drop para eliminar en el basurero
+      card.addEventListener("dragstart", (ev)=>{
+        card.classList.add("dragging");
+        ev.dataTransfer.effectAllowed = "move";
+        ev.dataTransfer.setData("text/plain", e.id);
+      });
+      card.addEventListener("dragend", ()=>{
+        card.classList.remove("dragging");
+      });
+
       list.appendChild(card);
     });
   }
@@ -426,7 +466,7 @@
   function setSearch(q) {
     state.search = q.trim();
     renderCalendar();
-    renderUpcoming(); // opcional si quieres que también influya en próximas (aquí no filtramos por búsqueda per se)
+    renderUpcoming(); // que también refresque la lista
   }
 
   // ----------------------------
@@ -459,7 +499,6 @@
   // ----------------------------
   function toICSDateTime(isoDate, hhmm) {
     const d = parseDateTime(isoDate, hhmm);
-    // ICS básico en local time (sin TZ). Para full TZ, usar VTIMEZONE.
     return `${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.getDate())}T${pad2(d.getHours())}${pad2(d.getMinutes())}00`;
   }
 
@@ -587,7 +626,7 @@
 
     // Buscador global
     $("#searchBox")?.addEventListener("input", (e)=> setSearch(e.target.value));
-    // Atajo Ctrl/Cmd+K
+    // Atajo Ctrl/Cmd+K (sigue funcionando aunque ya no lo muestres en placeholder)
     document.addEventListener("keydown", (e)=>{
       const isMac = navigator.platform.toUpperCase().includes("MAC");
       if ((isMac && e.metaKey && e.key.toLowerCase()==="k") ||
@@ -601,15 +640,45 @@
     $("#reminderForm")?.addEventListener("submit", onAddEvent);
     $("#exportICSBtn")?.addEventListener("click", onExportFormICS);
 
-    // Próximas citas
+    // Próximas citas: filtro
     $("#filterType")?.addEventListener("change", renderUpcoming);
-    $("#clearAll")?.addEventListener("click", ()=>{
+
+    // Basurero: click = borrar todo (como antes)
+    const trash = $("#clearAll");
+    trash?.addEventListener("click", ()=>{
       if (confirm("¿Borrar todos los recordatorios?")) {
         removeAllEvents();
         renderCalendar();
         renderUpcoming();
       }
     });
+
+    // Basurero: zona de DROP para borrar uno por uno
+    if (trash) {
+      ["dragenter","dragover"].forEach(evName=>{
+        trash.addEventListener(evName, (ev)=>{
+          ev.preventDefault();
+          trash.classList.add("drop-ready");
+          ev.dataTransfer.dropEffect = "move";
+        });
+      });
+      ["dragleave","drop"].forEach(evName=>{
+        trash.addEventListener(evName, ()=>{
+          trash.classList.remove("drop-ready");
+        });
+      });
+      trash.addEventListener("drop", (ev)=>{
+        ev.preventDefault();
+        const id = ev.dataTransfer.getData("text/plain");
+        if (!id) return;
+        const removed = removeEventById(id);
+        if (removed) {
+          renderCalendar();
+          renderUpcoming();
+          toast(`Eliminado: ${removed.title}`);
+        }
+      });
+    }
 
     // Notificaciones y export
     $("#btn-allow-notif")?.addEventListener("click", requestNotifications);
@@ -641,6 +710,15 @@
         setActiveLink(`link-${id}`);
       }
     }
+  }
+
+  function toast(msg) {
+    try {
+      // Reutiliza notificaciones si están habilitadas
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("MEDULA", { body: msg });
+      }
+    } catch {}
   }
 
   function showSection(id) {
@@ -708,14 +786,12 @@
   }
 
   function saveCurrentAfterAdd(item) {
-    // Ajusta mes visible al del evento agregado (útil cuando agregas fuera del mes actual)
     const d = fromISODate(item.date);
     state.current = new Date(d.getFullYear(), d.getMonth(), 1);
     saveCurrent();
   }
 
   function flashCell(isoDate) {
-    // Añade clase flash a la celda del mes actual que coincide
     const cell = $(`.cal-cell[data-date="${isoDate}"]`);
     if (!cell) return;
     cell.classList.add("flash");
